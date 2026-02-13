@@ -5,8 +5,8 @@ Este repositorio contiene el código fuente de la **Prueba de Concepto (PoC)** a
 El objetivo principal fue demostrar cómo una aplicación puede escribir simultáneamente en el sistema **Legacy (On-Premise)** y en la nueva infraestructura **Cloud**, manteniendo el Core del negocio totalmente desacoplado de esta complejidad mediante el **Patrón Composite**.
 
 ### 🔗 Contexto y Demo
-* **Caso de Estudio:** Para entender el desafío de negocio (tablas en Inglés vs Español), revisa el post aquí:
-    👉 **[LinkedIn Post: El desafío del Cliente - Migración Legacy a Nube](https://www.linkedin.com/posts/hwongu_el-cliente-lleg%C3%B3-con-una-petici%C3%B3n-que-suena-activity-7427374631667568640-BUlm?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAZyivkBpqjS-7ZvQubxyD0MzBUVYtR8T4k)**
+* **Caso de Estudio:** Para entender el desafío de negocio (tablas en Inglés vs Español) y sincronización, revisa el post aquí:
+    👉 **[LinkedIn Post: Del "Legacy" a la Nube: Implementando Dual Writer sin ensuciar el Dominio](https://www.linkedin.com/posts/hwongu_softwarearchitecture-designpatterns-compositepattern-activity-7427883033283825664-zbxu?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAZyivkBpqjS-7ZvQubxyD0MzBUVYtR8T4k)**
 * **Demo en Vivo:** Mira la ejecución del código y la sincronización de bases de datos en tiempo real:
     📺 **[YouTube: Demo Técnica Dual Writer en Java](https://youtu.be/1p2_dR4iSvM)**
 
