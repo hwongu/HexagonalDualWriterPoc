@@ -41,7 +41,9 @@ public class App {
 
     public static void main(String[] args) {
         int opcion;
-
+        System.out.println("=========================================");
+        System.out.println("POC DUAL WRITER - INICIADA");
+        System.out.println("=========================================");
         do {
             mostrarMenu();
             opcion = leerEntero("Seleccione una opcion: ");
