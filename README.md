@@ -17,17 +17,17 @@ El objetivo principal fue demostrar cómo una aplicación puede escribir simult�
 El proyecto sigue estrictamente la **Arquitectura Hexagonal (Ports & Adapters)**. La gran diferencia en esta versión es la implementación del patrón **Composite** en la capa de infraestructura para lograr la escritura doble transparente.
 
 ### 1️⃣ 1_Domain (El Negocio)
-Ubicación: `net.hwongu.prueba.domain`
+Ubicación: `net.hwongu.poc.domain`
 Aquí reside la lógica pura de la organización.
 * **Agnosticismo Total:** El dominio NO SABE que existe una estrategia de "Dual Write". Para el dominio, solo existe un repositorio donde guardar datos. Esto cumple con el Principio de Responsabilidad Única (SRP).
 
 ### 2️⃣ 2_Application (La Orquestación)
-Ubicación: `net.hwongu.prueba.application.service`
+Ubicación: `net.hwongu.poc.application.service`
 Contiene los casos de uso:
 * **CrearClienteService:** Llama al método `guardar()` del puerto. No contiene lógica de replicación ni if/else para elegir base de datos.
 
 ### 3️⃣ 3_Infrastructure (La Magia del Composite)
-Ubicación: `net.hwongu.prueba.infrastructure.adapter`
+Ubicación: `net.hwongu.poc.infrastructure.adapter`
 Aquí se encuentran los adaptadores que hacen posible la convivencia:
 
 * 🔄 **Dual Writer (El Orquestador):** `CompositeClienteRepository`
