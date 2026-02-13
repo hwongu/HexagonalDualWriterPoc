@@ -39,7 +39,7 @@ Aquí se encuentran los adaptadores que hacen posible la convivencia:
     * Conecta con Postgres Cloud (Tablas en Español `razon_social`).
 
 ### 4️⃣ 4_DataBase (Scripts de Validación)
-Ubicación: `/scripts`
+Ubicación: `/DataBase`
 Incluye los scripts SQL para simular los entornos heterogéneos:
 * `Db_OnPrememise.sql`: Crea el entorno Legacy.
 * `Db_Cloud.sql`: Crea el entorno Cloud.
