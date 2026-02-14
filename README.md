@@ -12,45 +12,53 @@ El objetivo principal fue demostrar cómo una aplicación puede escribir simult�
 
 ---
 
-## 📁 Estructura de la Solución
+## 📁 Estructura del Repositorio
 
-El proyecto sigue estrictamente la **Arquitectura Hexagonal (Ports & Adapters)**. La gran diferencia en esta versión es la implementación del patrón **Composite** en la capa de infraestructura para lograr la escritura doble transparente.
+El proyecto se divide en tres componentes físicos principales:
 
-### 1️⃣ 1_Domain (El Negocio)
-Ubicación: `net.hwongu.poc.domain`
-Aquí reside la lógica pura de la organización.
-* **Agnosticismo Total:** El dominio NO SABE que existe una estrategia de "Dual Write". Para el dominio, solo existe un repositorio donde guardar datos. Esto cumple con el Principio de Responsabilidad Única (SRP).
+### 1️⃣ 1_BackEnd (El Código Java)
+Ubicación: `/1_BackEnd/PoCDualWriter`
+Contiene el proyecto Maven con la implementación de la **Arquitectura Hexagonal**. Dentro de sus paquetes (`src/main/java/net/hwongu/poc`) encontrarás:
 
-### 2️⃣ 2_Application (La Orquestación)
-Ubicación: `net.hwongu.poc.application.service`
-Contiene los casos de uso:
-* **CrearClienteService:** Llama al método `guardar()` del puerto. No contiene lógica de replicación ni if/else para elegir base de datos.
+* **Domain (El Negocio):** Lógica pura. No sabe que existe un "Dual Write".
+* **Application (La Orquestación):** Casos de uso (`CrearClienteService`) que llaman a puertos.
+* **Infrastructure (La Magia del Composite):** Aquí reside el adaptador `CompositeClienteRepository` que actúa como proxy para delegar la escritura secuencial al adaptador Legacy (`DbOnPremise`) y al adaptador Cloud (`DbCloud`).
 
-### 3️⃣ 3_Infrastructure (La Magia del Composite)
-Ubicación: `net.hwongu.poc.infrastructure.adapter`
-Aquí se encuentran los adaptadores que hacen posible la convivencia:
+### 2️⃣ 2_DataBase (Scripts de Referencia)
+Ubicación: `/2_DataBase`
+Contiene los scripts SQL crudos (`.sql`) para referencia manual o ejecución individual:
+* `Db_OnPremise.sql`: Crea la tabla `customers` (Legacy en Inglés).
+* `Db_Cloud.sql`: Crea la tabla `cliente` (Cloud en Español).
 
-* 🔄 **Dual Writer (El Orquestador):** `CompositeClienteRepository`
-    * Implementa el patrón **Composite**.
-    * Actúa como un proxy que recibe el dato y lo delega secuencialmente a todas las implementaciones configuradas (Legacy + Cloud).
-* 🏢 **Legacy Adapter:** `ClienteRepositoryDbOnPremise`
-    * Conecta con Postgres On-Premise (Tablas en Inglés `business_name`).
-* ☁️ **Cloud Adapter:** `ClienteRepositoryDbCloud`
-    * Conecta con Postgres Cloud (Tablas en Español `razon_social`).
-
-### 4️⃣ 4_DataBase (Scripts de Validación)
-Ubicación: `/DataBase`
-Incluye los scripts SQL para simular los entornos heterogéneos:
-* `Db_OnPrememise.sql`: Crea el entorno Legacy.
-* `Db_Cloud.sql`: Crea el entorno Cloud.
+### 3️⃣ 3_Infrastructure (Automatización Docker)
+Ubicación: `/3_Infrastructure/PocAutomated`
+Contiene la **Infraestructura como Código (IaC)** para levantar los entornos de base de datos automáticamente sin instalar PostgreSQL localmente.
+* `docker-compose.yml`: Orquesta dos contenedores de base de datos.
+* `sql/`: Carpeta con los scripts de inicialización que Docker ejecuta al arrancar.
 
 ---
 
-## 📜 Licencia y Uso
+## 🚀 Guía de Ejecución (Entorno Dockerizado)
 
-Este código es propiedad intelectual de **Henry Wong** y se entrega como parte de los entregables de la consultoría para validación técnica.
-Está permitido su uso para referencia interna del equipo de desarrollo y arquitectura.
-Queda prohibido su uso en entornos productivos externos o su redistribución sin autorización.
+Para validar esta PoC, la infraestructura está automatizada mediante contenedores.
+
+1.  **Infraestructura:** Navega a la carpeta `3_Infrastructure/PocAutomated` y levanta los servicios utilizando tu orquestador de contenedores favorito.
+    * **Cloud DB:** Quedará expuesta en el puerto `5440`.
+    * **Legacy DB:** Quedará expuesta en el puerto `5441`.
+
+2.  **Aplicación:** Una vez que las bases de datos estén activas, abre el proyecto ubicado en `1_BackEnd` con tu IDE y ejecuta la clase principal `App.java`.
+
+---
+
+## 🐳 Comandos Docker
+
+Para levantar toda la infraestructura de las bases de datos: 
+
+docker-compose up -d
+
+Para detener los servicios y eliminar los volúmenes de datos (reset completo):
+
+docker-compose down -v
 
 ---
 
@@ -59,3 +67,25 @@ Queda prohibido su uso en entornos productivos externos o su redistribución sin
 Esta implementación utiliza una estrategia de **Dual Write Síncrono**. Aunque es funcional para la PoC y mantiene el código limpio:
 1.  **Latencia:** El tiempo de respuesta es la suma de las escrituras en Legacy + Cloud.
 2.  **Atomicidad:** En un entorno productivo, si falla la segunda escritura (Cloud) después de la primera, podría haber inconsistencia. Para producción crítica, se recomienda evolucionar hacia el patrón **Transactional Outbox** (Consistencia Eventual).
+
+---
+
+## 🛠️ Stack Tecnológico
+
+* **Lenguaje:** Java 21 (Records, Text Blocks, Switch Expressions).
+* **Arquitectura:** Hexagonal (Ports & Adapters).
+* **Patrones Clave:**
+    * **Composite Pattern** (Para la orquestación de repositorios).
+    * **Dual Writer Pattern** (Para la estrategia de migración).
+* **Base de Datos:** PostgreSQL 15 (Instancias Cloud y Legacy).
+* **Infraestructura:** Docker & Docker Compose.
+
+---
+
+**Author:** [Henry Wong](https://github.com/hwongu)
+
+---
+
+![Java](https://img.shields.io/badge/Java-21-orange?style=for-the-badge&logo=openjdk)
+![Docker](https://img.shields.io/badge/Docker-Compose-blue?style=for-the-badge&logo=docker)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?style=for-the-badge&logo=postgresql)
