@@ -31,7 +31,7 @@ import java.sql.*;
  */
 public class ClienteRepositoryDbCloud implements ClienteRepository {
 
-    private final String URL = "jdbc:postgresql://localhost:5432/Db_Cloud";
+    private final String URL = "jdbc:postgresql://localhost:5440/Db_Cloud";
     private final String USER = "postgres";
     private final String PASS = "clave";
 
